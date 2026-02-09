@@ -1,0 +1,17 @@
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Infrastructure.deps.json
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Infrastructure.dll
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Infrastructure.pdb
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.AssemblyInfoInputs.cache
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.AssemblyInfo.cs
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.csproj.CoreCompileInputs.cache
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.dll
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\refint\CRM.Infrastructure.dll
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.pdb
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\ref\CRM.Infrastructure.dll
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Application.dll
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Domain.dll
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Application.pdb
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\bin\Debug\net9.0\CRM.Domain.pdb
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infrastructure.csproj.AssemblyReference.cache
+D:\dailyc#\BankSimulation\CRM\CRM.Infrastructure\obj\Debug\net9.0\CRM.Infr.2D6F64BC.Up2Date
