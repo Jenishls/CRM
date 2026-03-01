@@ -11,9 +11,22 @@ namespace CRM.Domain.ValueObjects
         public DateTime IssueDate { get; }
         public DateTime? ExpiryDate { get; }
         public string? FileReference { get; private set; }   // e.g. "documents/12345/passport.pdf"
-        //public VerificationStatus VerificationStatus { get; private set; }
 
         private IdentityDocument() { } //EF
+
+        public IdentityDocument(DocumentType type, string documentNumber, string issuingCountry, DateTime issueDate, DateTime? expiryDate = null, string? fileReference = null)
+        {
+            if (string.IsNullOrWhiteSpace(type.ToString())) throw new DomainException("Document type is required.");
+            if (string.IsNullOrWhiteSpace(documentNumber)) throw new DomainException("Document number is required.");
+            if (string.IsNullOrWhiteSpace(issuingCountry)) throw new DomainException("Issuing country is required.");
+
+            Type = type;
+            DocumentNumber = documentNumber.Trim();
+            IssuingCountry = issuingCountry.Trim();
+            IssueDate = issueDate;
+            ExpiryDate = expiryDate;
+            FileReference = fileReference?.Trim();
+        }
 
         protected override IEnumerable<object?> GetEqualityComponents()
         {
