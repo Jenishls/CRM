@@ -1,0 +1,65 @@
+@host =  http://localhost:5239
+POST {{host}}/api/Customers/Create
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "middleName": "Michael",
+  "lastName": "Doe",
+  "contacts": [
+    {
+      "type": "Home",
+      "email": "john.doe@example.com",
+      "phone": "+46701234567",
+      "isPrimary": true
+    },
+    {
+      "type": "Work",
+      "email": "john.doe@company.com",
+      "phone": "+46707654321",
+      "isPrimary": false
+    }
+  ],
+  "addresses": [
+    {
+      "type": "1",
+      "addressLine1": "Storgatan 10",
+      "addressLine2": "Apartment 1202",
+      "city": "Stockholm",
+      "state": "Stockholm County",
+      "postalCode": "11122",
+      "country": "Sweden",
+      "isPrimary": true
+    },
+    {
+      "type": "2",
+      "addressLine1": "Sveavägen 50",
+      "addressLine2": null,
+      "city": "Stockholm",
+      "state": "Stockholm County",
+      "postalCode": "11359",
+      "country": "Sweden",
+      "isPrimary": false
+    }
+  ],
+  "identityDocuments": [
+    {
+      "type": "Passport",
+      "documentNumber": "P12345678",
+      "issuingAuthority": "Swedish Police Authority",
+      "issuingCountry": "Sweden",
+      "issuedDate": "2022-05-10T00:00:00Z",
+      "expiryDate": "2032-05-10T00:00:00Z",
+      "isPrimary": true
+    },
+    {
+      "type": "NationalId",
+      "documentNumber": "850101-1234",
+      "issuingAuthority": "Swedish Tax Agency",
+      "issuingCountry": "Sweden",
+      "issuedDate": "2020-01-01T00:00:00Z",
+      "expiryDate": null,
+      "isPrimary": false
+    }
+  ]
+}

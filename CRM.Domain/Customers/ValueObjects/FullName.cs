@@ -5,18 +5,25 @@ namespace CRM.Domain.Customers.ValueObjects
 {
     public sealed class FullName : ValueObject
     {
-        public string First { get; }
-        public string? Middle { get; }
-        public string Last { get; }
+        public  string First { get; private set;}
+        public string? Middle { get; private set;}
+        public string Last { get; private set;}
 
-        public FullName(string first, string last, string? middle = null)
+        private FullName() { } // EF
+    
+        private FullName(string firstName, string? middleName, string lastName)
+        {
+            First = firstName;
+            Middle = middleName;
+            Last = lastName;
+        }
+
+        public static FullName Create(string first,  string? middle = null, string? last = null)
         {
             if (string.IsNullOrWhiteSpace(first)) throw new DomainException("First name is required.");
             if (string.IsNullOrWhiteSpace(last))  throw new DomainException("Last name is required.");
 
-            First = first.Trim();
-            Middle = string.IsNullOrWhiteSpace(middle) ? null : middle.Trim();
-            Last  = last.Trim();
+             return new FullName(first.Trim(), middle?.Trim(), last.Trim());
         }
  
         protected override IEnumerable<object?> GetEqualityComponents()
