@@ -1,19 +1,16 @@
-using Crm.Domain.ValueObjects;
-using CRM.Domain.Common;
 using CRM.Domain.Customers.ValueObjects;
-using CRM.Domain.ValueObjects;
+using CRM.Domain.Common;
+
 
 namespace CRM.Domain.Customers
 {
     public sealed class Customer : AggregateRoot<CustomerId>
     {
         public FullName FullName { get; private set; }
-
         private readonly List<Address> _addresses = new();
         public IReadOnlyCollection<Address> Addresses => _addresses.AsReadOnly();
-
-        private readonly List<Contact> _contact = new();
-        public IReadOnlyCollection<Contact> Contact => _contact.AsReadOnly();
+        private readonly List<Contact> _contacts = new();
+        public IReadOnlyCollection<Contact> Contacts => _contacts.AsReadOnly();
 
         private readonly List<IdentityDocument> _identityDocuments = new();
         public IReadOnlyCollection<IdentityDocument> IdentityDocuments => _identityDocuments.AsReadOnly();
@@ -21,18 +18,37 @@ namespace CRM.Domain.Customers
 
         private Customer() { }
 
-        private Customer(CustomerId id, FullName name)
+        private Customer(
+            CustomerId id,
+            FullName name,
+            IEnumerable<Contact> primaryContacts,
+            IEnumerable<Address> primaryAddresses,
+            IEnumerable<IdentityDocument> primaryIdentifications)
+            : base(id)
         {
-            Id = id;
-            Name = name;
+            FullName = name;
+            _contacts = primaryContacts?.ToList() ?? new List<Contact>();
+            _addresses = primaryAddresses?.ToList() ?? new List<Address>();
+            _identityDocuments = primaryIdentifications?.ToList() ?? new List<IdentityDocument>();
         }
 
-        public static Customer CreateNew(FullName name) =>
-            new(CustomerId.New(), name);
+        
 
-        // Optional: for reconstitution (used by repository)
-        public static Customer Reconstitute(CustomerId id, FullName name) =>
-            new(id, name);
+        public static Customer CreateNew
+                (  FullName name, 
+                    IEnumerable<Contact> primaryContacts,
+                    IEnumerable<Address> primaryAddresses,
+                    IEnumerable<IdentityDocument> primaryIdentifications)
+        {
+            return new Customer(
+                CustomerId.New(),
+                name,
+                primaryContacts,
+                primaryAddresses,
+                primaryIdentifications
+            );
+            
+        }
 
         public void UpdateName(FullName newName)
         {
@@ -94,16 +110,16 @@ namespace CRM.Domain.Customers
             if (oldAddress == null || newAddress == null) throw new DomainException("Addresses cannot be null.");
             if (!_addresses.Contains(oldAddress)) throw new DomainException("Old address does not belong to this customer.");
 
-            var updatedAddress = new Address(
+            var updatedAddress = Address.Create(
                 newAddress.Type,
-                oldAddress.ValidFrom,
-                oldAddress.ValidTo,
                 newAddress.Street,
                 newAddress.City,
                 newAddress.State,
                 newAddress.ZipCode,
                 newAddress.Country,
-                oldAddress.IsPrimary
+                newAddress.IsPrimary,
+                newAddress.ValidFrom,
+                newAddress.ValidTo
             );
 
             _addresses.Remove(oldAddress);
@@ -112,20 +128,20 @@ namespace CRM.Domain.Customers
         public void AddContact(Contact contact)
         {
             if (contact == null) throw new DomainException("Contact cannot be null.");
-            _contact.Add(contact);
+            _contacts.Add(contact);
 
-            if(contact.IsPrimary && _contact.Any(c => c.IsPrimary))
+            if(contact.IsPrimary && _contacts.Any(c => c.IsPrimary))
                 throw new DomainException("Only one primary contact is allowed.");  
 
-            if(!contact.IsPrimary && !_contact.Any(c => c.IsPrimary))
+            if(!contact.IsPrimary && !_contacts.Any(c => c.IsPrimary))
                 contact = contact.WithIsPrimary(true); // Automatically set first contact as primary
         }
         public void UpdateContact(Contact oldContact, Contact newContact)
         {
             if (oldContact == null || newContact == null) throw new DomainException("Contacts cannot be null.");
-            if (!_contact.Contains(oldContact)) throw new DomainException("Old contact does not belong to this customer.");
+            if (!_contacts.Contains(oldContact)) throw new DomainException("Old contact does not belong to this customer.");
 
-            var updatedContact = new Contact(
+            var updatedContact = Contact.Create(
                 newContact.Type,
                 newContact.Phone,
                 newContact.Email,
@@ -134,18 +150,18 @@ namespace CRM.Domain.Customers
                 oldContact.IsPrimary
             );
 
-            _contact.Remove(oldContact);
-            _contact.Add(updatedContact);
+            _contacts.Remove(oldContact);
+            _contacts.Add(updatedContact);
         }
         public void SetPrimaryContact(Contact newPrimaryContact)
         {
             if (newPrimaryContact == null)
                 throw new DomainException("Contact cannot be null.");
 
-            if (!_contact.Any(c => c.Equals(newPrimaryContact)))
+            if (!_contacts.Any(c => c.Equals(newPrimaryContact)))
                 throw new DomainException("Contact does not belong to this customer.");
 
-            var currentPrimary = _contact.FirstOrDefault(c => c.IsPrimary);
+            var currentPrimary = _contacts.FirstOrDefault(c => c.IsPrimary);
 
             if (currentPrimary != null && currentPrimary.Equals(newPrimaryContact))
                 return;
@@ -161,12 +177,12 @@ namespace CRM.Domain.Customers
             updatedContacts.Add(promoted);
 
             if (currentPrimary != null)
-                _contact.Remove(currentPrimary);
-            var existingNew = _contact.FirstOrDefault(c => c.Equals(newPrimaryContact));
+                _contacts.Remove(currentPrimary);
+            var existingNew = _contacts.FirstOrDefault(c => c.Equals(newPrimaryContact));
             if (existingNew != null)
-                _contact.Remove(existingNew);
+                _contacts.Remove(existingNew);
 
-            _contact.AddRange(updatedContacts);
+            _contacts.AddRange(updatedContacts);
         }
 
         public void AddIdentityDocument(IdentityDocument document)
@@ -179,9 +195,10 @@ namespace CRM.Domain.Customers
             if (oldDocument == null || newDocument == null) throw new DomainException("Identity documents cannot be null.");
             if (!_identityDocuments.Contains(oldDocument)) throw new DomainException("Old document does not belong to this customer.");
 
-            var updatedDocument = new IdentityDocument(
+            var updatedDocument = IdentityDocument.Create(
                 newDocument.Type,
                 newDocument.DocumentNumber,
+                newDocument.IssuingAuthority,
                 newDocument.IssuingCountry,
                 newDocument.IssueDate,
                 newDocument.ExpiryDate,
@@ -200,7 +217,7 @@ namespace CRM.Domain.Customers
         public void RemoveContact(Contact contact)
         {
             if (contact == null) throw new DomainException("Contact cannot be null.");
-            _contact.Remove(contact);
+            _contacts.Remove(contact);
         }
 
         public void RemoveIdentityDocument(IdentityDocument document)
@@ -218,4 +235,5 @@ namespace CRM.Domain.Customers
             IsActive = true;
         }   
     
+    }
 }

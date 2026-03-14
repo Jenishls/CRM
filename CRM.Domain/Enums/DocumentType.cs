@@ -1,4 +1,4 @@
-namespace CMR.Domain.Enums
+namespace CRM.Domain.Enums
 {
     public enum DocumentType
     {

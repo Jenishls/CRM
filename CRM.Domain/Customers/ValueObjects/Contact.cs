@@ -1,7 +1,7 @@
 using CRM.Domain.Common;
 using CRM.Domain.Enums;
 
-namespace Crm.Domain.ValueObjects
+namespace CRM.Domain.Customers.ValueObjects
 {
     public sealed class Contact: ValueObject
     {
@@ -13,25 +13,29 @@ namespace Crm.Domain.ValueObjects
         public bool IsPrimary { get; private set; }
         private Contact() { } // EF
 
-        public Contact(ContactType type, string phone, string email, DateTime? validFrom=null,DateTime? validTo=null, bool isPrimary = false)
+        private Contact(string type, string phone, string email, bool isPrimary, DateTime? validFrom = null, DateTime? validTo = null)
         {
-            if (string.IsNullOrWhiteSpace(type.ToString())) throw new DomainException("Contact type is required.");
-            if (string.IsNullOrWhiteSpace(phone)) throw new DomainException("Phone is required.");
-            if (string.IsNullOrWhiteSpace(email)) throw new DomainException("Email is required.");
-
-            Type = type;
+            Type = Enum.TryParse<ContactType>(type, true, out var parsedType) ? parsedType : ContactType.Mobile; // Default to Mobile if parsing fails
             Phone = phone.Trim();
             Email = email.Trim();
             ValidFrom = validFrom ?? DateTime.UtcNow;
             ValidTo = validTo ?? DateTime.UtcNow.AddYears(100); // Default to a far future date if not provided
             IsPrimary = isPrimary;
         }
+        public static Contact Create(ContactType type, string phone, string email, DateTime? validFrom=null,DateTime? validTo=null, bool isPrimary = false)
+        {
+            if (string.IsNullOrWhiteSpace(type.ToString())) throw new DomainException("Contact type is required.");
+            if (string.IsNullOrWhiteSpace(phone)) throw new DomainException("Phone is required.");
+            if (string.IsNullOrWhiteSpace(email)) throw new DomainException("Email is required.");
+
+            return new Contact(type.ToString(), phone, email, isPrimary, validFrom, validTo);
+        }
 
         public Contact WithValidTo(DateTime validTo)=>
-            new Contact(Type, Phone, Email, ValidFrom, validTo, IsPrimary);
+            new Contact(Type.ToString(), Phone, Email, IsPrimary, validTo, ValidFrom);
         
         public Contact WithIsPrimary(bool isPrimary) =>
-            new Contact(Type, Phone, Email, ValidFrom, ValidTo, isPrimary);
+            new Contact(Type.ToString(), Phone, Email, isPrimary, ValidFrom, ValidTo);
 
         protected override IEnumerable<object?> GetEqualityComponents()
         {

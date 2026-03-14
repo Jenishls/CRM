@@ -1,9 +1,9 @@
 using CRM.Domain.Common;
 using CRM.Domain.Enums;
 
-namespace CRM.Domain.ValueObjects
+namespace CRM.Domain.Customers.ValueObjects
 {
-    public class Address : ValueObject
+    public sealed class Address : ValueObject
     {
         public AddressType Type{get;}
         public DateTime ValidFrom { get; }
@@ -17,36 +17,49 @@ namespace CRM.Domain.ValueObjects
 
         private Address() { } //EF
 
-           public Address(
-        AddressType type,
-        DateTime validFrom,
-        DateTime? validTo,
-        string street,
-        string city,
-        string state,
-        string zipCode,
-        string country,
-        bool isPrimary = false)
-    {
-        Type = type;
-        ValidFrom = validFrom;
-        ValidTo = validTo;
-        Street = street ?? throw new DomainException(nameof(street));
-        City = city ?? throw new DomainException(nameof(city));
-        State = state;
-        ZipCode = zipCode;
-        Country = country ?? throw new DomainException(nameof(country));
-        IsPrimary = isPrimary;
+        private Address(
+            AddressType type,
+            DateTime validFrom,
+            DateTime? validTo,
+            string street,
+            string city,
+            string state,
+            string zipCode,
+            string country,
+            bool isPrimary = false)
+        {
+            Type = type;
+            ValidFrom = validFrom;
+            ValidTo = validTo;
+            Street = street ;
+            City = city ;
+            State = state;
+            ZipCode = zipCode;
+            Country = country;
+            IsPrimary = isPrimary;
 
-        if (validTo.HasValue && validTo < validFrom)
-            throw new DomainException("ValidTo must be after ValidFrom");
-    }
+            
+        }
 
-    public Address WithIsPrimary(bool isPrimary) =>
-        new Address(Type, ValidFrom, ValidTo, Street, City, State, ZipCode, Country, isPrimary);
+        public static Address Create(AddressType type, string street, string city, string state, string zipCode, string country, bool isPrimary = false, DateTime? validFrom = null, DateTime? validTo = null)
+        {
+            if (type == 0) throw new DomainException("Address type is required.");
+            if (string.IsNullOrWhiteSpace(street)) throw new DomainException("Street is required.");
+            if (string.IsNullOrWhiteSpace(city)) throw new DomainException("City is required.");
+            if (string.IsNullOrWhiteSpace(country)) throw new DomainException("Country is required.");
+            if (validTo.HasValue && validTo < validFrom)
+                throw new DomainException("ValidTo must be after ValidFrom");
 
-    public Address WithValidTo(DateTime validTo) =>
-        new Address(Type, ValidFrom, validTo, Street, City, State, ZipCode, Country, IsPrimary);
+            var addressType = Enum.TryParse<AddressType>(type.ToString(), true, out var parsedType) ? parsedType : AddressType.Residential; // Default to Home if parsing fails
+
+            return new Address(addressType, validFrom ?? DateTime.UtcNow, validTo ?? DateTime.UtcNow.AddYears(100), street.Trim(), city.Trim(), state.Trim(), zipCode.Trim(), country.Trim(), isPrimary);
+        }
+
+        public Address WithIsPrimary(bool isPrimary) =>
+            new Address(Type, ValidFrom, ValidTo, Street, City, State, ZipCode, Country, isPrimary);
+
+        public Address WithValidTo(DateTime validTo) =>
+            new Address(Type, ValidFrom, validTo, Street, City, State, ZipCode, Country, IsPrimary);
 
 
         protected override IEnumerable<object?> GetEqualityComponents()
