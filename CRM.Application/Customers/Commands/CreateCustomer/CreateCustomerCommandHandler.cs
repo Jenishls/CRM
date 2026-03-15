@@ -24,13 +24,13 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         var identificationNumbers = request.Identifications.Select(i => i.DocumentNumber.Trim()).ToList();
 
         if (await _customerRepository.ExistsByEmailAsync(primaryEmail, cancellationToken))
-            return Error.Conflict("A customer with the same primary email already exists.");
+            return Error.Conflict(code: "Customer.EmailAlreadyExists", description: "A customer with the same primary email already exists.");
         
         if(await _customerRepository.ExistsByIdentificationNumbersAsync(identificationNumbers, cancellationToken))
-            return Error.Conflict("A customer with the same identification number already exists.");
+            return Error.Conflict(code: "Customer.IdentificationNumberAlreadyExists", description: "A customer with the same identification number already exists.");
 
         if(await _customerRepository.ExistsByNationalIdAsync(nationlId, cancellationToken))
-            return Error.Conflict("A customer with the same national ID already exists.");
+            return Error.Conflict(code: "Customer.NationalIdAlreadyExists", description: "A customer with the same national ID already exists.");
         
         var contacts = request.Contacts
             .Select(c => Contact.Create(

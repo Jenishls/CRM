@@ -32,7 +32,9 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasMaxLength(100)
             .IsRequired();
     });
-
+        builder.Property(c => c.CifId)
+       .ValueGeneratedOnAdd();
+       
         builder.Property(c => c.IsActive)
             .IsRequired();
 

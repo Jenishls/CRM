@@ -4,12 +4,13 @@ using CRM.API.Contracts.Requests.Customers;
 using CRM.Application.Customers.Commands.CreateCustomer;
 using CRM.Application.Common.Utilities;
 using CRM.Domain.Enums;
+using CRM.Api.Common;
 
 namespace CRM.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CustomersController : ControllerBase
+    public class CustomersController : ApiController
     {
         private readonly IMediator _mediator;
         public CustomersController(IMediator mediator)
@@ -63,8 +64,12 @@ namespace CRM.Api.Controllers
                 }).ToList()
             };
 
-            var customerId = await _mediator.Send(command, ct);
-            return Ok(new { id = customerId.Value });
+            var result = await _mediator.Send(command, ct);
+            // return Ok(new { id = customerId.Value });
+            return result.Match(
+                id => CreatedAtAction(nameof(GetById), new { id }, id),
+                errors => Problem(errors)
+            );
             // return CreatedAtAction(nameof(GetById), new { id = customerId }, new { Id = customerId });
         }
 

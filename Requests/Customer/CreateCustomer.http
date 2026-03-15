@@ -44,8 +44,8 @@ Content-Type: application/json
   ],
   "identityDocuments": [
     {
-      "type": "Passport",
-      "documentNumber": "P12345678",
+      "type": "1",
+      "documentNumber": "P123456781",
       "issuingAuthority": "Swedish Police Authority",
       "issuingCountry": "Sweden",
       "issuedDate": "2022-05-10T00:00:00Z",
@@ -53,7 +53,7 @@ Content-Type: application/json
       "isPrimary": true
     },
     {
-      "type": "NationalId",
+      "type": "3",
       "documentNumber": "850101-1234",
       "issuingAuthority": "Swedish Tax Agency",
       "issuingCountry": "Sweden",

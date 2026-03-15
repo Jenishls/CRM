@@ -6,6 +6,7 @@ namespace CRM.Domain.Customers
 {
     public sealed class Customer : AggregateRoot<CustomerId>
     {
+        public int CifId { get; private set; }
         public FullName FullName { get; private set; }
         private readonly List<Address> _addresses = new();
         public IReadOnlyCollection<Address> Addresses => _addresses.AsReadOnly();
@@ -20,6 +21,7 @@ namespace CRM.Domain.Customers
 
         private Customer(
             CustomerId id,
+            int CifId,
             FullName name,
             IEnumerable<Contact> primaryContacts,
             IEnumerable<Address> primaryAddresses,
@@ -41,7 +43,9 @@ namespace CRM.Domain.Customers
                     IEnumerable<IdentityDocument> primaryIdentifications)
         {
             return new Customer(
+
                 CustomerId.New(),
+                0, // CifId will be set by the persistence layer
                 name,
                 primaryContacts,
                 primaryAddresses,

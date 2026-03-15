@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CRM.Infrastructure.Persistence.Migrations
+namespace CRM.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260314195820_InitialCustomerSchema")]
+    [Migration("20260315082733_InitialCustomerSchema")]
     partial class InitialCustomerSchema
     {
         /// <inheritdoc />
@@ -28,6 +28,12 @@ namespace CRM.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CifId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CifId"));
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
