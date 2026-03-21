@@ -11,10 +11,11 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasKey(c => c.Id);
 
         builder.Property(c => c.Id)
+            .HasColumnName("Id")
             .ValueGeneratedNever()
             .HasConversion(
                 id => id.Value,
-                value => CustomerId.New());
+                value => new CustomerId(value));
 
         builder.OwnsOne(c => c.FullName, fullName =>
         {

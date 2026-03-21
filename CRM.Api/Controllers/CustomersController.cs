@@ -5,6 +5,9 @@ using CRM.Application.Customers.Commands.CreateCustomer;
 using CRM.Application.Common.Utilities;
 using CRM.Domain.Enums;
 using CRM.Api.Common;
+using CRM.Application.Customers.Queries.GetAllCustomers;
+using Crm.Application.Customers.Queries.GetCustomerByCif;
+using CRM.Application.Customers.Queries.GetCustomerByCif;
 
 namespace CRM.Api.Controllers
 {
@@ -18,11 +21,15 @@ namespace CRM.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
         {
-            // Placeholder for getting all customers
-            return Ok(new { Message = "Get all customers - Not implemented yet." });
+            var result= await _mediator.Send(new GetAllCustomersQuery());
+
+            return result.Match(
+                list => Ok(list),
+                errors => Problem(errors)
+            );
         }
 
         [HttpPost("Create")]
@@ -73,11 +80,15 @@ namespace CRM.Api.Controllers
             // return CreatedAtAction(nameof(GetById), new { id = customerId }, new { Id = customerId });
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id,CancellationToken ct)
+        [HttpGet("GetbyCif/{id}")]
+        public async Task<IActionResult> GetById(int id,CancellationToken ct)
         {
-            // Placeholder for getting a customer by ID
-            return Ok();
+            var result = await _mediator.Send(new GetCustomerByCifQuery(id));
+
+            return result.Match(
+                list => Ok(list),
+                errors => Problem(errors)
+            );
         }
     }
 }   

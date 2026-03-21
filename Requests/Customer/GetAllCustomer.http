@@ -1,0 +1,3 @@
+@host =  http://localhost:5239
+GET {{host}}/api/Customers/GetAll
+Content-Type: application/json

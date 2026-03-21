@@ -4,18 +4,18 @@ Content-Type: application/json
 
 {
   "firstName": "John",
-  "middleName": "Michael",
+  "middleName": "Gil",
   "lastName": "Doe",
   "contacts": [
     {
       "type": "Home",
-      "email": "john.doe@example.com",
+      "email": "john.gil.doe@example.com",
       "phone": "+46701234567",
       "isPrimary": true
     },
     {
       "type": "Work",
-      "email": "john.doe@company.com",
+      "email": "john.gil.doe@company.com",
       "phone": "+46707654321",
       "isPrimary": false
     }
@@ -54,7 +54,7 @@ Content-Type: application/json
     },
     {
       "type": "3",
-      "documentNumber": "850101-1234",
+      "documentNumber": "850101-12034",
       "issuingAuthority": "Swedish Tax Agency",
       "issuingCountry": "Sweden",
       "issuedDate": "2020-01-01T00:00:00Z",

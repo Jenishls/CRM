@@ -1,7 +1,6 @@
 using CRM.Domain.Customers.ValueObjects;
 using CRM.Domain.Common;
 
-
 namespace CRM.Domain.Customers
 {
     public sealed class Customer : AggregateRoot<CustomerId>
@@ -21,13 +20,14 @@ namespace CRM.Domain.Customers
 
         private Customer(
             CustomerId id,
-            int CifId,
+            int cifId,
             FullName name,
             IEnumerable<Contact> primaryContacts,
             IEnumerable<Address> primaryAddresses,
             IEnumerable<IdentityDocument> primaryIdentifications)
             : base(id)
         {
+            CifId = cifId;
             FullName = name;
             _contacts = primaryContacts?.ToList() ?? new List<Contact>();
             _addresses = primaryAddresses?.ToList() ?? new List<Address>();

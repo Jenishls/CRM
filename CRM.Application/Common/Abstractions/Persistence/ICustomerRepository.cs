@@ -3,7 +3,7 @@ using CRM.Domain.Customers;
 public interface ICustomerRepository
 {
     Task AddAsync(Customer customer, CancellationToken ct);
-    Task<Customer?> GetByIdAsync(CustomerId id, CancellationToken ct = default);
+    Task<Customer?> GetByIdAsync(int cifId, CancellationToken ct = default);
     Task<List<Customer>> GetAllAsync(CancellationToken ct = default);
 
     Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default);

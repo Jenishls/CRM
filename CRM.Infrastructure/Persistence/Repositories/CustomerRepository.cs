@@ -1,5 +1,4 @@
 using CRM.Domain.Customers;
-using CRM.Domain.Customers.ValueObjects;
 using CRM.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +14,11 @@ public sealed class CustomerRepository : ICustomerRepository
     public Task AddAsync(Customer customer, CancellationToken ct = default)
         => _db.Customers.AddAsync(customer, ct).AsTask();
 
-    public Task<Customer?> GetByIdAsync(CustomerId id, CancellationToken ct = default)
-        => _db.Customers.FirstOrDefaultAsync(x => x.Id == id, ct);
+    public Task<Customer?> GetByIdAsync(int cifId, CancellationToken ct = default)
+        => _db.Customers.FirstOrDefaultAsync(x => x.CifId == cifId, ct);
 
-    public Task<List<Customer>> GetAllAsync(CancellationToken ct = default)
-        => _db.Customers.ToListAsync(ct);
+    public async Task<List<Customer>>  GetAllAsync(CancellationToken ct = default)
+        => await _db.Customers.Include(c => c.Contacts).AsNoTracking().ToListAsync(ct);
 
     public void Update(Customer customer)
         => _db.Customers.Update(customer);
@@ -70,4 +69,6 @@ public sealed class CustomerRepository : ICustomerRepository
                 d.DocumentNumber == nationalId),
             ct);
     }
+
+
 }
