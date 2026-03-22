@@ -17,21 +17,6 @@ public class GetAllCustomerHandler : IRequestHandler<GetAllCustomersQuery, Error
 
     public async Task<ErrorOr<CustomerListResponse>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
-        // return new CustomerListResponse
-        // {
-        //     Customers = new List<CustomerResponse>
-        //     {
-        //         new CustomerResponse
-        //         {
-        //             CifId = 1,
-        //             Id = Guid.NewGuid(),
-        //             FirstName = "Test",
-        //             LastName = "User",
-        //             IsActive = true
-        //         }
-        //     }
-        // };
-
         var customers = await _repository.GetAllAsync(cancellationToken);
 
         if(customers is null || customers.Count == 0)

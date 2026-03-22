@@ -1,0 +1,7 @@
+@host =  http://localhost:5239
+PATCH {{host}}/api/Customers/Status/2
+Content-Type: application/json
+
+{
+    "IsActive" : true
+}

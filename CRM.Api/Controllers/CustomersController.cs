@@ -2,12 +2,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using CRM.API.Contracts.Requests.Customers;
 using CRM.Application.Customers.Commands.CreateCustomer;
-using CRM.Application.Common.Utilities;
-using CRM.Domain.Enums;
 using CRM.Api.Common;
 using CRM.Application.Customers.Queries.GetAllCustomers;
-using Crm.Application.Customers.Queries.GetCustomerByCif;
 using CRM.Application.Customers.Queries.GetCustomerByCif;
+using CRM.Contracts.Requests;
+using CRM.Application.Customers.Commands.UpdateCustomerStatus;
 
 namespace CRM.Api.Controllers
 {
@@ -77,7 +76,6 @@ namespace CRM.Api.Controllers
                 id => CreatedAtAction(nameof(GetById), new { id }, id),
                 errors => Problem(errors)
             );
-            // return CreatedAtAction(nameof(GetById), new { id = customerId }, new { Id = customerId });
         }
 
         [HttpGet("GetbyCif/{id}")]
@@ -89,6 +87,17 @@ namespace CRM.Api.Controllers
                 list => Ok(list),
                 errors => Problem(errors)
             );
+        }
+        [HttpPatch("Status/{cifId}")]
+        public async Task<IActionResult> UpdateStatus(
+            int cifId, 
+            UpdateCustomerStatusRequest updateCustomerStatusRequest, 
+            CancellationToken ct)
+        {
+            var command = new UpdateCustomerStatusCommand(cifId, updateCustomerStatusRequest.IsActive);
+            var result = await _mediator.Send(command, ct);
+
+            return result.Match(_=> NoContent(), errors => Problem(errors));
         }
     }
 }   

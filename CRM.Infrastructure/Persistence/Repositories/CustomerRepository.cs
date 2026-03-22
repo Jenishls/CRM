@@ -23,9 +23,6 @@ public sealed class CustomerRepository : ICustomerRepository
     public void Update(Customer customer)
         => _db.Customers.Update(customer);
 
-    public void Remove(Customer customer)
-        => _db.Customers.Remove(customer);
-
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(email))
