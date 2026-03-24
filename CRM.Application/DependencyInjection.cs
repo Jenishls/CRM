@@ -1,3 +1,4 @@
+using CRM.Application.Customers.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ namespace CRM.Application
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddScoped<CustomerSyncService>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             return services;

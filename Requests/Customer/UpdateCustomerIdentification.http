@@ -1,0 +1,28 @@
+@host =  http://localhost:5239
+PUT {{host}}/api/Customers/2/Identification
+Content-Type: application/json
+
+{
+  "IdentityDocuments": [
+    {
+      "id": "db3c4b70-fcc2-48f4-8b29-08de8274177f",
+      "type": "Passport",
+      "documentNumber": "P123456781",
+      "issuingAuthority": "Swedish Police Authority",
+      "issuingCountry": "Sweden",
+      "issuedDate": "2022-05-10T00:00:00",
+      "expiryDate": "2032-05-10T00:00:00",
+      "isPrimary": false
+    },
+    {
+      "id": "9a5bbab1-03fb-4b57-8b2a-08de8274177f",
+      "type": "NationalID",
+      "documentNumber": "850101-12034",
+      "issuingAuthority": "Swedish Tax Agency",
+      "issuingCountry": "Sweden",
+      "issuedDate": "2020-01-01T00:00:00",
+      "expiryDate": null,
+      "isPrimary": false
+    }
+  ]
+}

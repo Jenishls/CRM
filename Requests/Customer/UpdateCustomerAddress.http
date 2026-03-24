@@ -1,0 +1,28 @@
+@host =  http://localhost:5239
+PUT {{host}}/api/Customers/2/Address
+Content-Type: application/json
+
+{
+    "addresses": [
+    {
+      "id": "4a0ca6c7-0e27-44a2-74f9-08de82741778",
+      "type": "Residential",
+      "street": "Storgatan 10",
+      "city": "Stockholm",
+      "state": "Stockholm County",
+      "zipCode": "11122",
+      "country": "Sweden",
+      "isPrimary": true
+    },
+    {
+      "id": "4daad1d0-a773-4121-74fa-08de82741778",
+      "type": "Mailing",
+      "street": "Sveavägen 50",
+      "city": "Stockholm",
+      "state": "Stockholm County",
+      "zipCode": "11359",
+      "country": "Sweden",
+      "isPrimary": false
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+  @host =  http://localhost:5239
+PUT {{host}}/api/Customers/2/Contact
+Content-Type: application/json
+
+{  "contacts": [
+    {
+      "id": "956932e5-4d60-4c80-e9cc-08de8274177c",
+      "type": "Home",
+      "email": "john.gil.doe@example.com",
+      "phone": "+46701234567",
+      "isPrimary": true,
+      "validFrom":"2000-01-05",
+      "validTo": "2030-11-10"
+    },
+    {
+      "id": "fcced2cf-055d-4153-e9cd-08de8274177c",
+      "type": "Work",
+      "email": "john.gil.doe@companies.com",
+      "phone": "+46707654321",
+      "isPrimary": false,
+      "validFrom":"1997-08-02",
+      "validTo" : "2099-01-01"
+    }
+  ]
+}

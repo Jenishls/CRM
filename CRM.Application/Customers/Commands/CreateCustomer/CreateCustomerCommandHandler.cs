@@ -5,6 +5,8 @@ using ErrorOr;
 using MediatR;
 using CRM.Application.Customers.Commands.CreateCustomer;
 using CRM.Application.Common.Utilities;
+using CRM.Domain.Customers.Entites;
+using CRM.Domain.Entities;
 
 
 public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, ErrorOr<Guid>>
@@ -19,8 +21,27 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
 
     public async Task<ErrorOr<Guid>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
-        var primaryEmail = request.Contacts.FirstOrDefault(c => c.IsPrimary)?.Email.Trim().ToLowerInvariant();
-        var nationlId = request.Identifications.FirstOrDefault(i => i.Type.ToString() == DocumentType.NationalID.ToString())?.DocumentNumber.Trim();
+        // var primaryEmail = request.Contacts.FirstOrDefault(c => c.IsPrimary)?.Email.Trim().ToLowerInvariant();
+        var primaryContact = request.Contacts.FirstOrDefault(c => c.IsPrimary);
+
+        if (primaryContact?.Email is null)
+            return Error.Validation(
+                code: "Customer.PrimaryEmailRequired",
+                description: "Primary contact must have an email address.");
+
+        var primaryEmail = primaryContact.Email.Trim().ToLowerInvariant();
+        
+        // var nationlId = request.Identifications.FirstOrDefault(i => i.Type.ToString() == DocumentType.NationalID.ToString())?.DocumentNumber.Trim();
+        var nationalIdDocument = request.Identifications
+            .FirstOrDefault(i => i.Type.ToString() == DocumentType.NationalID.ToString());
+
+        if (nationalIdDocument is null)
+            return Error.Validation(
+                code: "Customer.NationalIdRequired",
+                description: "A National ID document is required."+ request.ToString());
+
+        var nationalId = nationalIdDocument.DocumentNumber.Trim();
+
         var identificationNumbers = request.Identifications.Select(i => i.DocumentNumber.Trim()).ToList();
 
         if (await _customerRepository.ExistsByEmailAsync(primaryEmail, cancellationToken))
@@ -29,7 +50,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         if(await _customerRepository.ExistsByIdentificationNumbersAsync(identificationNumbers, cancellationToken))
             return Error.Conflict(code: "Customer.IdentificationNumberAlreadyExists", description: "A customer with the same identification number already exists.");
 
-        if(await _customerRepository.ExistsByNationalIdAsync(nationlId, cancellationToken))
+        if(await _customerRepository.ExistsByNationalIdAsync(nationalId, cancellationToken))
             return Error.Conflict(code: "Customer.NationalIdAlreadyExists", description: "A customer with the same national ID already exists.");
         
         var contacts = request.Contacts
@@ -62,7 +83,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
                 i.DocumentNumber.Trim(),
                 i.IssuingAuthority.Trim(),
                 i.IssuingCountry.Trim(),
-                i.IssuedDate ?? DateTime.UtcNow,
+                i.IssuedDate,
                 i.ExpiryDate))
             .ToList();
 

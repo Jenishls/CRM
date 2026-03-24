@@ -1,63 +1,71 @@
 @host =  http://localhost:5239
-POST {{host}}/api/Customers/Create
+GET {{host}}/api/Customers/GetByCif/2
 Content-Type: application/json
 
+
 {
+  "id": "94a3e93b-1b7e-42eb-b62a-3c32a3b73e99",
+  "cifId": 2,
   "firstName": "John",
   "middleName": "Gil",
   "lastName": "Doe",
+  "isActive": true,
   "contacts": [
     {
+      "id": "956932e5-4d60-4c80-e9cc-08de8274177c",
       "type": "Home",
-      "email": "john.gil.doe@example.com",
+      "email": "john.gil.doe@examples.com",
       "phone": "+46701234567",
       "isPrimary": true
     },
     {
+      "id": "fcced2cf-055d-4153-e9cd-08de8274177c",
       "type": "Work",
-      "email": "john.gil.doe@company.com",
+      "email": "john.gil.doe@companies.com",
       "phone": "+46707654321",
       "isPrimary": false
     }
   ],
   "addresses": [
     {
-      "type": "1",
-      "addressLine1": "Storgatan 10",
-      "addressLine2": "Apartment 1202",
+      "id": "4a0ca6c7-0e27-44a2-74f9-08de82741778",
+      "type": "Residential",
+      "street": "Storgatan 10",
       "city": "Stockholm",
       "state": "Stockholm County",
-      "postalCode": "11122",
+      "zipCode": "11122",
       "country": "Sweden",
       "isPrimary": true
     },
     {
-      "type": "2",
-      "addressLine1": "Sveavägen 50",
-      "addressLine2": null,
+      "id": "4daad1d0-a773-4121-74fa-08de82741778",
+      "type": "Mailing",
+      "street": "Sveavägen 50",
       "city": "Stockholm",
       "state": "Stockholm County",
-      "postalCode": "11359",
+      "zipCode": "11359",
       "country": "Sweden",
       "isPrimary": false
     }
   ],
   "identityDocuments": [
     {
-      "type": "4",
+      "id": "db3c4b70-fcc2-48f4-8b29-08de8274177f",
+      "type": "Passport",
       "documentNumber": "P123456781",
       "issuingAuthority": "Swedish Police Authority",
       "issuingCountry": "Sweden",
-      "issuedDate": "2022-05-10T00:00:00Z",
-      "expiryDate": "2032-05-10T00:00:00Z",
-      "isPrimary": true
+      "issuedDate": "2022-05-10T00:00:00",
+      "expiryDate": "2032-05-10T00:00:00",
+      "isPrimary": false
     },
     {
+      "id": "9a5bbab1-03fb-4b57-8b2a-08de8274177f",
       "type": "NationalID",
       "documentNumber": "850101-12034",
       "issuingAuthority": "Swedish Tax Agency",
       "issuingCountry": "Sweden",
-      "issuedDate": "2020-01-01T00:00:00Z",
+      "issuedDate": "2020-01-01T00:00:00",
       "expiryDate": null,
       "isPrimary": false
     }

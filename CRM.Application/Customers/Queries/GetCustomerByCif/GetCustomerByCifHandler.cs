@@ -33,6 +33,7 @@ public class GetCustomerByCifHandler : IRequestHandler<GetCustomerByCifQuery, Er
                 IsActive = response.IsActive,
                 Addresses = response.Addresses.Select(a => new CustomerDetailResponse.AddressResponse
                 {
+                    Id = a.Id,
                     Type = a.Type.ToString(),
                     Street = a.Street,
                     City = a.City,
@@ -43,6 +44,7 @@ public class GetCustomerByCifHandler : IRequestHandler<GetCustomerByCifQuery, Er
                 }).ToList(),
                 Contacts = response.Contacts.Select(c => new CustomerDetailResponse.ContactResponse
                 {
+                    Id = c.Id,
                     Type = c.Type.ToString(),
                     Email = c.Email,
                     Phone = c.Phone,
@@ -51,6 +53,7 @@ public class GetCustomerByCifHandler : IRequestHandler<GetCustomerByCifQuery, Er
 
                 IdentityDocuments = response.IdentityDocuments.Select(i => new CustomerDetailResponse.IdentityDocumentResponse
                 {
+                    Id = i.Id,
                     Type = i.Type.ToString(),
                     DocumentNumber = i.DocumentNumber,
                     IssuingAuthority = i.IssuingAuthority,
@@ -60,8 +63,5 @@ public class GetCustomerByCifHandler : IRequestHandler<GetCustomerByCifQuery, Er
                 }).ToList()
             };
             return customer;
-    
     }
-
-
 }

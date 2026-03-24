@@ -11,5 +11,5 @@ public interface ICustomerRepository
     Task<bool> ExistsByNationalIdAsync(string nationalId, CancellationToken ct = default);
 
     void Update(Customer customer);
-    void Remove(Customer customer);
+    //void Remove(Customer customer);
 }

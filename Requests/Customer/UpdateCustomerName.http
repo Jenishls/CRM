@@ -1,0 +1,9 @@
+@host =  http://localhost:5239
+PUT {{host}}/api/Customers/2/Name
+Content-Type: application/json
+
+{
+    "FirstName": "Test",
+    "MiddleName": "First",
+    "LastName": "Name"
+}

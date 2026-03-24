@@ -10,6 +10,8 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.HasKey(c => c.Id);
 
+        builder.Property(c=> c.RowVersion).IsRowVersion().IsRequired();
+        
         builder.Property(c => c.Id)
             .HasColumnName("Id")
             .ValueGeneratedNever()
@@ -44,8 +46,9 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             contact.ToTable("CustomerContacts");
             contact.WithOwner().HasForeignKey("CustomerId");
 
-            contact.Property<Guid>("Id");
+            // contact.Property<Guid>("Id");
             contact.HasKey("Id");
+            contact.Property(c => c.Id).ValueGeneratedNever();
 
             contact.Property(c => c.Type).HasConversion<string>().HasMaxLength(50).IsRequired();
             contact.Property(c => c.Phone).HasMaxLength(20);
@@ -60,8 +63,9 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             address.ToTable("CustomerAddresses");
             address.WithOwner().HasForeignKey("CustomerId");
 
-            address.Property<Guid>("Id");
+            // address.Property<Guid>("Id");
             address.HasKey("Id");
+            address.Property(a => a.Id).ValueGeneratedNever(); 
 
             address.Property(a => a.Type).HasConversion<string>().HasMaxLength(50).IsRequired();
             address.Property(a => a.Street).HasMaxLength(200).IsRequired();
@@ -80,8 +84,9 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
             doc.WithOwner().HasForeignKey("CustomerId");
 
-            doc.Property<Guid>("Id");
+            // doc.Property<Guid>("Id");
             doc.HasKey("Id");
+            doc.Property(d => d.Id).ValueGeneratedNever(); 
 
             doc.Property(d => d.Type)
                 .HasConversion<string>()
