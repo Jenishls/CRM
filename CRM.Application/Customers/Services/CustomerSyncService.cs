@@ -48,7 +48,7 @@ public class CustomerSyncService
             customer.RemoveContact(contact);
 
         // Add or Update
-        foreach (var contactDto in incomingContacts)
+        foreach (var contactDto in incomingContacts.OrderBy(c => c.IsPrimary))
         {
             var existing = customer.Contacts
                 .FirstOrDefault(c => c.Id == contactDto.Id);
@@ -122,7 +122,7 @@ public class CustomerSyncService
         foreach (var address in removedAddresses)
             customer.RemoveAddress(address);
 
-        foreach (var addressDto in incomingAddresses)
+        foreach (var addressDto in incomingAddresses.OrderBy(a => a.IsPrimary))
         {
             var existing = customer.Addresses
                 .FirstOrDefault(a => a.Id == addressDto.Id);

@@ -13,5 +13,18 @@ namespace CRM.Application.Customers.Commands.CreateCustomer
         public List<ContactDto> Contacts { get; set; } = new();
         public List<AddressDto> Addresses { get; set; } = new();
         public List<IdentificationDto> Identifications { get; set; } = new();
+        public string? CustomerStatus { get; set; }
+        public string? KycStatus { get; set; }
+        public string? RiskLevel { get; set; }
+        public string? RiskCategory { get; set; }
+        public string? RiskSubCategory { get; set; }
+        public decimal? AnnualIncome { get; set; }
+        public string? SourceOfFunds { get; set; }
+        public string? Occupation { get; set; }
+        public string? EmployerName { get; set; }
+        public string? EmploymentStatus { get; set; }
+        public string? PurposeOfRelationship { get; set; }
+        public decimal? ExpectedMonthlyTransactionVolume { get; set; }
+        public DateTime? CustomerSince { get; set; }
     }
 }

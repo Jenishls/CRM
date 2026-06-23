@@ -41,6 +41,56 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.IsActive)
             .IsRequired();
 
+        builder.Property(c => c.CustomerType)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(c => c.CustomerStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(c => c.KycStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(c => c.RiskLevel)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(c => c.RiskCategory)
+            .HasMaxLength(100);
+
+        builder.Property(c => c.RiskSubCategory)
+            .HasMaxLength(100);
+
+        builder.Property(c => c.AnnualIncome)
+            .HasPrecision(18, 2);
+
+        builder.Property(c => c.SourceOfFunds)
+            .HasMaxLength(200);
+
+        builder.Property(c => c.Occupation)
+            .HasMaxLength(100);
+
+        builder.Property(c => c.EmployerName)
+            .HasMaxLength(200);
+
+        builder.Property(c => c.EmploymentStatus)
+            .HasMaxLength(100);
+
+        builder.Property(c => c.PurposeOfRelationship)
+            .HasMaxLength(200);
+
+        builder.Property(c => c.ExpectedMonthlyTransactionVolume)
+            .HasPrecision(18, 2);
+
+        builder.Property(c => c.CustomerSince)
+            .IsRequired();
+
         builder.OwnsMany(c => c.Contacts, contact =>
         {
             contact.ToTable("CustomerContacts");

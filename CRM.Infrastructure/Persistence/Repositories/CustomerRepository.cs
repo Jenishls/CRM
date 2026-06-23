@@ -15,10 +15,19 @@ public sealed class CustomerRepository : ICustomerRepository
         => _db.Customers.AddAsync(customer, ct).AsTask();
 
     public Task<Customer?> GetByIdAsync(int cifId, CancellationToken ct = default)
-        => _db.Customers.FirstOrDefaultAsync(x => x.CifId == cifId, ct);
+        => _db.Customers
+            .Include(c => c.Contacts)
+            .Include(c => c.Addresses)
+            .Include(c => c.IdentityDocuments)
+            .FirstOrDefaultAsync(x => x.CifId == cifId, ct);
 
     public async Task<List<Customer>>  GetAllAsync(CancellationToken ct = default)
-        => await _db.Customers.Include(c => c.Contacts).AsNoTracking().ToListAsync(ct);
+        => await _db.Customers
+            .Include(c => c.Contacts)
+            .Include(c => c.Addresses)
+            .Include(c => c.IdentityDocuments)
+            .AsNoTracking()
+            .ToListAsync(ct);
 
     public void Update(Customer customer)
         => _db.Customers.Update(customer);

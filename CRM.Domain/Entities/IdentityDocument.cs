@@ -91,5 +91,16 @@ namespace CRM.Domain.Entities
                 IssueDate,
                 expiryDate,
                 FileReference);
+
+        public IdentityDocument WithId(Guid id) =>
+            new IdentityDocument(
+                id,
+                Type,
+                DocumentNumber,
+                IssuingAuthority,
+                IssuingCountry,
+                IssueDate,
+                ExpiryDate,
+                FileReference);
     }
 }

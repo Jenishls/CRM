@@ -91,7 +91,20 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
             FullName.Create(request.FirstName.Trim(), request.MiddleName?.Trim(), request.LastName.Trim()),
             contacts ,
             addresses,
-            identifications);
+            identifications,
+            ParseOrDefault(request.CustomerStatus, CustomerStatus.Active),
+            ParseOrDefault(request.KycStatus, KycStatus.NotStarted),
+            ParseOrDefault(request.RiskLevel, RiskLevel.Unknown),
+            request.RiskCategory,
+            request.RiskSubCategory,
+            request.AnnualIncome,
+            request.SourceOfFunds,
+            request.Occupation,
+            request.EmployerName,
+            request.EmploymentStatus,
+            request.PurposeOfRelationship,
+            request.ExpectedMonthlyTransactionVolume,
+            request.CustomerSince);
 
         try
         {
@@ -104,5 +117,9 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
 
         return customer.Id.Value;
     }
+
+    private static TEnum ParseOrDefault<TEnum>(string? value, TEnum defaultValue)
+        where TEnum : struct, Enum
+        => string.IsNullOrWhiteSpace(value) ? defaultValue : EnumParser.Parse<TEnum>(value);
 
 }

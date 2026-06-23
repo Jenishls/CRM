@@ -61,5 +61,19 @@ Content-Type: application/json
       "expiryDate": null,
       "isPrimary": false
     }
-  ]
+  ],
+  "profile": {
+    "customerStatus": "Active",
+    "kycStatus": "NotStarted",
+    "riskLevel": "Low",
+    "riskCategory": "Retail",
+    "riskSubCategory": "Salaried",
+    "annualIncome": 650000,
+    "sourceOfFunds": "Salary",
+    "occupation": "Software Engineer",
+    "employerName": "Example AB",
+    "employmentStatus": "Employed",
+    "purposeOfRelationship": "Salary account and savings",
+    "expectedMonthlyTransactionVolume": 50000
+  }
 }

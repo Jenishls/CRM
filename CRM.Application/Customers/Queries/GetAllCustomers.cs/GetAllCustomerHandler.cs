@@ -33,7 +33,21 @@ public class GetAllCustomerHandler : IRequestHandler<GetAllCustomersQuery, Error
             LastName = c.FullName.Last,
             PrimaryEmail = c.Contacts.Where(x=>x.IsPrimary).Select(x=>x.Email).FirstOrDefault(),
             PrimaryPhone = c.Contacts.Where(x=>x.IsPrimary).Select(x=>x.Phone).FirstOrDefault(),
-            IsActive = c.IsActive
+            IsActive = c.IsActive,
+            CustomerType = c.CustomerType.ToString(),
+            CustomerStatus = c.CustomerStatus.ToString(),
+            KycStatus = c.KycStatus.ToString(),
+            RiskLevel = c.RiskLevel.ToString(),
+            RiskCategory = c.RiskCategory,
+            RiskSubCategory = c.RiskSubCategory,
+            AnnualIncome = c.AnnualIncome,
+            SourceOfFunds = c.SourceOfFunds,
+            Occupation = c.Occupation,
+            EmployerName = c.EmployerName,
+            EmploymentStatus = c.EmploymentStatus,
+            PurposeOfRelationship = c.PurposeOfRelationship,
+            ExpectedMonthlyTransactionVolume = c.ExpectedMonthlyTransactionVolume,
+            CustomerSince = c.CustomerSince
         }).ToList();
         
         return new CustomerListResponse

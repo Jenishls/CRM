@@ -1,7 +1,9 @@
 using System.Data;
 using CRM.Application.Common.Errors;
+using CRM.Application.Common.Utilities;
 using CRM.Application.Customers.Services;
 using CRM.Domain.Customers.ValueObjects;
+using CRM.Domain.Enums;
 using ErrorOr;
 using MediatR;
 
@@ -60,6 +62,24 @@ namespace CRM.Application.Customers.Commands.PatchCustomer
                 if (result.IsError) return result.Errors;
             }
 
+            if (command.Profile is not null)
+            {
+                customer.UpdatePersonalProfile(
+                    ParseOrDefault(command.Profile.CustomerStatus, customer.CustomerStatus),
+                    ParseOrDefault(command.Profile.KycStatus, customer.KycStatus),
+                    ParseOrDefault(command.Profile.RiskLevel, customer.RiskLevel),
+                    command.Profile.RiskCategory ?? customer.RiskCategory,
+                    command.Profile.RiskSubCategory ?? customer.RiskSubCategory,
+                    command.Profile.AnnualIncome ?? customer.AnnualIncome,
+                    command.Profile.SourceOfFunds ?? customer.SourceOfFunds,
+                    command.Profile.Occupation ?? customer.Occupation,
+                    command.Profile.EmployerName ?? customer.EmployerName,
+                    command.Profile.EmploymentStatus ?? customer.EmploymentStatus,
+                    command.Profile.PurposeOfRelationship ?? customer.PurposeOfRelationship,
+                    command.Profile.ExpectedMonthlyTransactionVolume ?? customer.ExpectedMonthlyTransactionVolume,
+                    command.Profile.CustomerSince ?? customer.CustomerSince);
+            }
+
             try
             {
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -70,6 +90,10 @@ namespace CRM.Application.Customers.Commands.PatchCustomer
             }
             return Unit.Value;
         }
+
+        private static TEnum ParseOrDefault<TEnum>(string? value, TEnum defaultValue)
+            where TEnum : struct, Enum
+            => string.IsNullOrWhiteSpace(value) ? defaultValue : EnumParser.Parse<TEnum>(value);
     }
 
 }

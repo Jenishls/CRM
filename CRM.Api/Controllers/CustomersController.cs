@@ -70,7 +70,20 @@ namespace CRM.Api.Controllers
                                                                         IssuingCountry: d.IssuingCountry,
                                                                         IssuedDate: d.IssuedDate,
                                                                         ExpiryDate: d.ExpiryDate
-                                                                        )).ToList()
+                                                                        )).ToList(),
+                CustomerStatus = request.Profile?.CustomerStatus,
+                KycStatus = request.Profile?.KycStatus,
+                RiskLevel = request.Profile?.RiskLevel,
+                RiskCategory = request.Profile?.RiskCategory,
+                RiskSubCategory = request.Profile?.RiskSubCategory,
+                AnnualIncome = request.Profile?.AnnualIncome,
+                SourceOfFunds = request.Profile?.SourceOfFunds,
+                Occupation = request.Profile?.Occupation,
+                EmployerName = request.Profile?.EmployerName,
+                EmploymentStatus = request.Profile?.EmploymentStatus,
+                PurposeOfRelationship = request.Profile?.PurposeOfRelationship,
+                ExpectedMonthlyTransactionVolume = request.Profile?.ExpectedMonthlyTransactionVolume,
+                CustomerSince = request.Profile?.CustomerSince
             };
 
             var result = await _mediator.Send(command, cancellationToken);
@@ -142,7 +155,22 @@ namespace CRM.Api.Controllers
                                                             i.IssuingAuthority,
                                                             i.IssuingCountry,
                                                             i.IssuedDate,
-                                                            i.ExpiryDate)).ToList()
+                                                            i.ExpiryDate)).ToList(),
+                Profile = request.Profile is null ? null :
+                    new PatchPersonalProfileDto(
+                        request.Profile.CustomerStatus,
+                        request.Profile.KycStatus,
+                        request.Profile.RiskLevel,
+                        request.Profile.RiskCategory,
+                        request.Profile.RiskSubCategory,
+                        request.Profile.AnnualIncome,
+                        request.Profile.SourceOfFunds,
+                        request.Profile.Occupation,
+                        request.Profile.EmployerName,
+                        request.Profile.EmploymentStatus,
+                        request.Profile.PurposeOfRelationship,
+                        request.Profile.ExpectedMonthlyTransactionVolume,
+                        request.Profile.CustomerSince)
             };
             var result = await _mediator.Send(command);
             if(result.IsError)

@@ -1,5 +1,5 @@
-using System.Security.Cryptography.X509Certificates;
 using CRM.Application.Customers.Validators.Update;
+using CRM.Domain.Enums;
 using FluentValidation;
 
 namespace CRM.Application.Customers.Commands.PatchCustomer
@@ -29,8 +29,8 @@ namespace CRM.Application.Customers.Commands.PatchCustomer
                 .MaximumLength(100).WithMessage("Last Name cannot exceed 100 characters");
             });
 
-            //If Address is provided
-            When(x => x.Addresses is not null, () =>
+            // Contacts section - only validate if provided
+            When(x => x.Contacts is not null, () =>
             {
                 RuleFor(x => x.Contacts!).NotEmpty().WithMessage("Contact list cannot be empty when provided");
 
@@ -81,6 +81,36 @@ namespace CRM.Application.Customers.Commands.PatchCustomer
                     .When(x => x.Identifications!.Any());
 
             });
+
+            When(x => x.Profile is not null, () =>
+            {
+                RuleFor(x => x.Profile!.CustomerStatus)
+                    .Must(BeValidEnum<CustomerStatus>)
+                    .When(x => !string.IsNullOrWhiteSpace(x.Profile!.CustomerStatus))
+                    .WithMessage("Invalid customer status.");
+
+                RuleFor(x => x.Profile!.KycStatus)
+                    .Must(BeValidEnum<KycStatus>)
+                    .When(x => !string.IsNullOrWhiteSpace(x.Profile!.KycStatus))
+                    .WithMessage("Invalid KYC status.");
+
+                RuleFor(x => x.Profile!.RiskLevel)
+                    .Must(BeValidEnum<RiskLevel>)
+                    .When(x => !string.IsNullOrWhiteSpace(x.Profile!.RiskLevel))
+                    .WithMessage("Invalid risk level.");
+
+                RuleFor(x => x.Profile!.AnnualIncome)
+                    .GreaterThanOrEqualTo(0)
+                    .When(x => x.Profile!.AnnualIncome.HasValue);
+
+                RuleFor(x => x.Profile!.ExpectedMonthlyTransactionVolume)
+                    .GreaterThanOrEqualTo(0)
+                    .When(x => x.Profile!.ExpectedMonthlyTransactionVolume.HasValue);
+            });
         }
+
+        private static bool BeValidEnum<TEnum>(string? value)
+            where TEnum : struct, Enum
+            => Enum.TryParse<TEnum>(value, true, out _);
     }
 }

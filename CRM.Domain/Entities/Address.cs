@@ -97,5 +97,18 @@ namespace CRM.Domain.Entities
                 isPrimary,
                 ValidFrom,
                 ValidTo);
+
+        public Address WithId(Guid id) =>
+            new Address(
+                id,
+                Type,
+                Street,
+                City,
+                State,
+                ZipCode,
+                Country,
+                IsPrimary,
+                ValidFrom,
+                ValidTo);
     }
 }

@@ -62,6 +62,8 @@ namespace CRM.Domain.Customers.Entites
 
         public Contact WithValidTo(DateTime validTo) =>
             new Contact(Id, Type, Phone, Email, IsPrimary, ValidFrom, validTo);
+
+        public Contact WithId(Guid id) =>
+            new Contact(id, Type, Phone, Email, IsPrimary, ValidFrom, ValidTo);
     }
 }
-

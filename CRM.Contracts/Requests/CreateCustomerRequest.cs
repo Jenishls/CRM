@@ -1,3 +1,5 @@
+using CRM.Contracts.Requests.Common;
+
 namespace CRM.API.Contracts.Requests.Customers;
 
 public class CreateCustomerRequest
@@ -10,6 +12,8 @@ public class CreateCustomerRequest
     public List<AddressRequest> Addresses { get; init; } = new();
 
     public List<IdentityDocumentRequest> IdentityDocuments { get; init; } = new();
+
+    public PersonalProfileRequestModel? Profile { get; init; }
 }
 
 public sealed class ContactRequest
